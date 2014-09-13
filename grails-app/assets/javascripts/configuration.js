@@ -103,7 +103,7 @@ var Configuration = (function($) {
             '<td><strong>' + data.description + '</strong></td>' +
             '<td><strong>' + data.key + '</strong></td>' +
             '<td>' + data.value + '</td>' +
-            '<td>' + data.type + '</td>' +
+            '<td>' + $("#new-config-type option[value='" + data.type + "']").text() + '</td>' +
             '<td><a href="#" class="configuration-delete" onclick="Configuration.remove(' + data.id + ')">Delete</a></td>' +
             '</tr>';
         $("#config-table-body").append(html);
