@@ -38,7 +38,11 @@ class BootStrap {
 
 Then in your application, navigate to the `configuration/index` controller action (the URI should be `/your-application-name/configuration`) to see the Configuration Management page.
 
-If you do not use the `create`, `create-drop`, or `update` `dbCreate` options in your `DataSource.groovy` file, or you use the [Grails Database Migration Plugin](http://grails.org/plugin/database-migration), then you need to manually create the table to store your Configuration. The following are the Grails migration and SQL queries required to do so:
+### Schema Creation
+
+If you do not use the `create`, `create-drop`, or `update` `dbCreate` options in your `DataSource.groovy` file, or you use the [Grails Database Migration Plugin](http://grails.org/plugin/database-migration), then you need to manually create the table to store your Configuration. Otherwise, __you do not need to perform either of these__.
+
+The following are the Grails migration and SQL queries required to do so:
 
 Grails migration:
 
