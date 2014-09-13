@@ -2,6 +2,7 @@ package grails.plugin.mergeconfig
 
 import grails.transaction.Transactional
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
+import org.springframework.context.NoSuchMessageException
 import org.springframework.context.i18n.LocaleContextHolder as LH
 
 @Transactional
@@ -20,7 +21,12 @@ class ConfigurationService {
 
     if (!config.save(flush: true)) {
       def error = config?.errors?.fieldError
-      def message = messageSource.getMessage("configuration.${error?.field}.${error?.code}", [].toArray(), LH.locale)
+      def message
+      try {
+        message = messageSource.getMessage("configuration.${error?.field}.${error?.code}", [].toArray(), LH.locale)
+      } catch(NoSuchMessageException e) {
+        message = messageSource.getMessage("configuration.unknown.error", [].toArray(), LH.locale)
+      }
       return [status: "fail", message: message]
     }
 
