@@ -1,5 +1,7 @@
 package grails.plugin.mergeconfig
 
+import org.codehaus.groovy.grails.commons.GrailsApplication
+
 class Configuration {
 
   String description
@@ -11,9 +13,7 @@ class Configuration {
     description nullable: true
   }
 
-  static void merge() {
-    def application = new Configuration().domainClass.grailsApplication
-
+  static void merge(GrailsApplication application) {
     def mergedConfig = new ConfigObject()
     def currentConfig = application.config
     def persistedConfig = Configuration.load()
