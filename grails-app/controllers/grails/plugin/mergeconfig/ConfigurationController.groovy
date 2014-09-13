@@ -12,8 +12,7 @@ class ConfigurationController {
 
   def index() {
     def configs = Configuration.list(sort: 'key')
-    def currentConfig = configurationService.configuration
-    [configs: configs, configsCount: configs.size(), types: [String, Integer], currentConfig: currentConfig]
+    [configs: configs, configsCount: configs.size(), types: [String, Integer]]
   }
 
   def save() {

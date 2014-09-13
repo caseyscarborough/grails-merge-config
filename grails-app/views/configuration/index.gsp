@@ -49,13 +49,6 @@
     </div>
   </div>
   <button class="btn btn-primary" id="configuration-create-button">Save</button>
-  <hr>
-  <h3>Current Grails Configuration</h3>
-  <ul>
-    <g:each in="${currentConfig}" var="config">
-      <li><strong>${config?.key}</strong> - ${config?.value}</li>
-    </g:each>
-  </ul>
   <script>
     $(function() { Configuration.init(${configsCount}) })
   </script>
