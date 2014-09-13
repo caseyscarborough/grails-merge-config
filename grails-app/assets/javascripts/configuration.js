@@ -7,10 +7,10 @@ var Configuration = (function($) {
         if (_validateFields(["#new-config-description", "#new-config-key", "#new-config-value"])) {
             var url = $("#configuration-save-url").html();
             var data = {
-                key: $("#new-config-key").val(),
-                value: $("#new-config-value").val(),
+                key: $.trim($("#new-config-key").val()),
+                value: $.trim($("#new-config-value").val()),
                 type: $("#new-config-type").val(),
-                description: $("#new-config-description").val()
+                description: $.trim($("#new-config-description").val())
             };
 
             _startCreateButton();
