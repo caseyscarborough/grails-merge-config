@@ -3,43 +3,8 @@ var Configuration = (function($) {
     var self = {},
         configsCount = null;
 
-    var _validateFields = function(fields) {
-        var valid = true;
-        $.each(fields, function(i, val) {
-            if ($.trim($(val).val()) === "") {
-                $(val).focus();
-                $(val).parent().addClass("has-error");
-                valid = false;
-                return false;
-            } else {
-                $(val).parent().removeClass("has-error");
-            }
-        });
-        return valid;
-    };
-
-    var _clearFields = function() {
-        $("#new-config-key").val("");
-        $("#new-config-value").val("");
-        $("#new-config-description").val("");
-    };
-
-    var _appendToTable = function(data) {
-        var html = '' +
-            '<tr id="config-' + data.id + '">' +
-                '<td><strong>' + data.description + '</strong></td>' +
-                '<td><strong>' + data.key + '</strong></td>' +
-                '<td>' + data.value + '</td>' +
-                '<td>' + data.type + '</td>' +
-                '<td><a href="#" class="configuration-delete" onclick="Configuration.remove(' + data.id + ')">Delete</a></td>' +
-            '</tr>';
-        $("#config-table-body").append(html);
-    };
-
     var _create = function() {
         if (_validateFields(["#new-config-description", "#new-config-key", "#new-config-value"])) {
-            var createButton = $("#configuration-create-button");
-            var buttonText = createButton.html();
             var url = $("#configuration-save-url").html();
             var data = {
                 key: $("#new-config-key").val(),
@@ -48,29 +13,17 @@ var Configuration = (function($) {
                 description: $("#new-config-description").val()
             };
 
-            createButton.attr("disabled", "disabled");
-            createButton.html("Saving...");
-
-            $.ajax({
-                url: url,
-                data: data,
-                type: 'POST'
-            }).done(function(response) {
-                configsCount++;
+            _startCreateButton();
+            $.ajax({ url: url, data: data, type: 'POST'}).done(function(response) {
                 data.id = response.data.config.id;
+                configsCount++;
                 _clearFields();
                 _appendToTable(data);
-                createButton.removeAttr("disabled");
-                createButton.html(buttonText);
-
-                if (configsCount > 0) {
-                    $("#no-config-records").hide();
-                    $("#config-table").show();
-                }
+                _endCreateButton();
+                _updateTable();
             }).fail(function(response) {
                 alert(response.responseJSON.message);
-                createButton.removeAttr("disabled");
-                createButton.html(buttonText);
+                _endCreateButton();
             });
         }
     };
@@ -78,16 +31,10 @@ var Configuration = (function($) {
     self.remove = function(id) {
         if (confirm("Are you sure?")) {
             var url = $("#configuration-delete-url").html();
-            $.ajax({
-                url: url + "/" + id,
-                type: 'DELETE'
-            }).done(function() {
-                configsCount--;
+            $.ajax({ url: url + "/" + id, type: 'DELETE' }).done(function() {
                 $("#config-" + id).remove();
-                if (configsCount == 0) {
-                    $("#no-config-records").show();
-                    $("#config-table").hide();
-                }
+                configsCount--;
+                _updateTable();
             }).fail(function(response) {
                 alert(response.responseJSON.message)
             });
@@ -105,6 +52,61 @@ var Configuration = (function($) {
             var id = $(this).attr("data-config-id");
            _remove(id);
         });
+    };
+
+    var _updateTable = function() {
+        if (configsCount > 0) {
+            $("#no-config-records").hide();
+            $("#config-table").show();
+        } else {
+            $("#no-config-records").show();
+            $("#config-table").hide();
+        }
+    };
+
+    var _validateFields = function(fields) {
+        var valid = true;
+        $.each(fields, function(i, val) {
+            if ($.trim($(val).val()) === "") {
+                $(val).focus();
+                $(val).parent().addClass("has-error");
+                valid = false;
+                return false;
+            } else {
+                $(val).parent().removeClass("has-error");
+            }
+        });
+        return valid;
+    };
+
+    var _startCreateButton = function() {
+        var createButton = $("#configuration-create-button");
+        createButton.attr("disabled", "disabled");
+        createButton.html("Saving...");
+    };
+
+    var _endCreateButton = function() {
+        var createButton = $("#configuration-create-button");
+        createButton.removeAttr("disabled");
+        createButton.html("Save");
+    };
+
+    var _clearFields = function() {
+        $("#new-config-key").val("");
+        $("#new-config-value").val("");
+        $("#new-config-description").val("");
+    };
+
+    var _appendToTable = function(data) {
+        var html = '' +
+            '<tr id="config-' + data.id + '">' +
+            '<td><strong>' + data.description + '</strong></td>' +
+            '<td><strong>' + data.key + '</strong></td>' +
+            '<td>' + data.value + '</td>' +
+            '<td>' + data.type + '</td>' +
+            '<td><a href="#" class="configuration-delete" onclick="Configuration.remove(' + data.id + ')">Delete</a></td>' +
+            '</tr>';
+        $("#config-table-body").append(html);
     };
 
     return self;
