@@ -23,11 +23,7 @@ class ConfigurationService {
 
   Map create(GrailsParameterMap params) {
     def existingItem = grailsApplication.config.flatten().get(params?.key)
-    println existingItem
-
-    println params?.key
-
-    if (existingItem == null) {
+    if (!existingItem) {
       return [status: "fail", message: getMessage("configuration.not.exists")]
     }
 

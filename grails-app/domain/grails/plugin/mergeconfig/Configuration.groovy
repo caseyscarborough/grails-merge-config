@@ -13,12 +13,26 @@ class Configuration {
     key unique: true
   }
 
+  def getValueWithType() {
+    def returnValue = value
+    if (type == "java.lang.Integer") {
+      try {
+        returnValue = Integer.parseInt(returnValue)
+      } catch(NumberFormatException e) {
+        returnValue = value
+        type = "java.lang.String"
+        save(flush: true)
+      }
+    }
+    return returnValue
+  }
+
   static void merge(GrailsApplication application) {
     application.config.merge(Configuration.load())
   }
 
   static void add(GrailsApplication application, Configuration config) {
-    application.config.put(config?.key, config?.value)
+    application.config.put(config?.key, config?.valueWithType)
   }
 
   static void remove(GrailsApplication application, Configuration c) {
