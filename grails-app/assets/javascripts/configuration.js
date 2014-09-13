@@ -36,7 +36,7 @@ var Configuration = (function($) {
     };
 
     var _create = function() {
-        if (_validateFields(["#new-config-key", "#new-config-value"])) {
+        if (_validateFields(["#new-config-description", "#new-config-key", "#new-config-value"])) {
             var createButton = $("#configuration-create-button");
             var buttonText = createButton.html();
             var url = createButton.attr("data-url");
