@@ -13,16 +13,10 @@ class Configuration {
     key unique: true
   }
 
-  def getValueWithType() {
+  Object getValueWithType() {
     def returnValue = value
-    if (type == "Integer") {
-      try {
-        returnValue = Integer.parseInt(returnValue)
-      } catch(NumberFormatException e) {
-        returnValue = value
-        type = "String"
-        save(flush: true)
-      }
+    if (type == "Integer" || type == "Double") {
+      returnValue = getNumericValue(returnValue)
     } else if (type == "Boolean") {
       return (value.equalsIgnoreCase("true"))
     }
@@ -61,5 +55,27 @@ class Configuration {
       config.merge(new ConfigSlurper().parse(new File(configFile).text))
     }
     config
+  }
+
+  private Boolean setTypeToString() {
+    type = "String"
+    save(flush: true)
+  }
+
+  private Object getNumericValue(returnValue) {
+    try {
+      switch(type) {
+        case "Integer":
+          returnValue == Integer.parseInt(returnValue)
+          break
+        case "Double":
+          returnValue == Double.parseDouble(returnValue)
+          break
+      }
+    } catch(NumberFormatException e) {
+      // Type is not numeric
+      this.setTypeToString()
+    }
+    return returnValue
   }
 }
