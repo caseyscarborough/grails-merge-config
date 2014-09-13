@@ -1,5 +1,6 @@
 package grails.plugin.mergeconfig
 
+import static grails.plugin.mergeconfig.ConfigurationType.*
 import org.codehaus.groovy.grails.commons.GrailsApplication
 
 class Configuration {
@@ -7,7 +8,7 @@ class Configuration {
   String description
   String key
   String value
-  String type
+  ConfigurationType type
 
   static constraints = {
     key unique: true
@@ -15,9 +16,9 @@ class Configuration {
 
   Object getValueWithType() {
     def returnValue = value
-    if (type == "Integer" || type == "Double") {
+    if (type == INTEGER || type == DOUBLE) {
       returnValue = getNumericValue(returnValue)
-    } else if (type == "Boolean") {
+    } else if (type == BOOLEAN) {
       return (value.equalsIgnoreCase("true"))
     }
     return returnValue
@@ -58,17 +59,17 @@ class Configuration {
   }
 
   private Boolean setTypeToString() {
-    type = "String"
+    type = STRING
     save(flush: true)
   }
 
   private Object getNumericValue(returnValue) {
     try {
       switch(type) {
-        case "Integer":
+        case INTEGER:
           returnValue == Integer.parseInt(returnValue)
           break
-        case "Double":
+        case DOUBLE:
           returnValue == Double.parseDouble(returnValue)
           break
       }

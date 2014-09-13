@@ -20,7 +20,7 @@ class ConfigurationService {
     def config = new Configuration(
       key: params?.key,
       value: (String) params?.value,
-      type: params?.type,
+      type: ConfigurationType.valueOf(params?.type),
       description: params?.description
     )
 
