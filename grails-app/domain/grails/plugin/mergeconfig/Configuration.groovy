@@ -14,12 +14,23 @@ class Configuration {
   }
 
   static void merge(GrailsApplication application) {
-    def currentConfig = application.config
-    def persistedConfig = Configuration.load()
+    application.config.merge(Configuration.load())
+  }
 
-    def mergedConfig = new ConfigObject()
-    mergedConfig.putAll(currentConfig.merge(persistedConfig))
-    application.config = mergedConfig
+  static void add(GrailsApplication application, Configuration config) {
+    application.config.put(config?.key, config?.value)
+  }
+
+  static void remove(GrailsApplication application, Configuration c) {
+    application.config.remove(c?.key)
+    ConfigObject config = new ConfigObject()
+    application.config.locations.each { String location ->
+      String configFile = location.split("file:")[0]
+      config.merge(new ConfigSlurper().parse(new File(configFile).text))
+    }
+    application.config.put(c?.key, config.get(c?.key))
+
+    c.delete(flush: true)
   }
 
   static ConfigObject load() {

@@ -5,6 +5,7 @@
     <th>Key</th>
     <th>Value</th>
     <th>Type</th>
+    <th>Options</th>
   </tr>
   </thead>
   <tbody id="config-table-body">

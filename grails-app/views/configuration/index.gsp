@@ -8,13 +8,13 @@
 
 <body>
   <h1>Configuration Management</h1>
+  <span id="configuration-save-url" style="display:none">${createLink(controller: 'configuration', action: 'save')}</span>
+  <span id="configuration-delete-url" style="display:none">${createLink(controller: 'configuration', action: 'delete')}</span>
   <hr>
   <h3>List</h3>
   <div id="config-list">
     <g:render template="configurationList" model="[configs: configs, types: types]" />
-    <g:if test="${configsCount == 0}">
-      <p id="no-config-records"><g:message code="configuration.no.records" /></p>
-    </g:if>
+    <p id="no-config-records"<g:if test="${configsCount != 0}"> style="display:none"</g:if>><g:message code="configuration.no.records" /></p>
   </div>
   <hr>
   <h3>New</h3>
@@ -48,14 +48,16 @@
       </div>
     </div>
   </div>
-  <button class="btn btn-primary" id="configuration-create-button" data-url="${createLink(controller: 'configuration', action: 'save')}">Save</button>
+  <button class="btn btn-primary" id="configuration-create-button">Save</button>
   <hr>
   <h3>Current Grails Configuration</h3>
-  <g:each in="${grailsApplication.config}" var="config">
-    ${config}
-  </g:each>
+  <ul>
+    <g:each in="${currentConfig}" var="config">
+      <li><strong>${config?.key}</strong> - ${config?.value}</li>
+    </g:each>
+  </ul>
   <script>
-    $(function() { Configuration.init() })
+    $(function() { Configuration.init(${configsCount}) })
   </script>
 </body>
 </html>

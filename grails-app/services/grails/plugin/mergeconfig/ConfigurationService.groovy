@@ -23,14 +23,29 @@ class ConfigurationService {
       def error = config?.errors?.fieldError
       def message
       try {
-        message = messageSource.getMessage("configuration.${error?.field}.${error?.code}", [].toArray(), LH.locale)
+        message = getMessage("configuration.${error?.field}.${error?.code}")
       } catch(NoSuchMessageException e) {
-        message = messageSource.getMessage("configuration.unknown.error", [].toArray(), LH.locale)
+        message = getMessage("configuration.unknown.error")
       }
       return [status: "fail", message: message]
     }
 
-    Configuration.merge(grailsApplication)
+    Configuration.add(grailsApplication, config)
     return [status: "success", data: [config: config]]
+  }
+
+  Map delete(Long id) {
+    def config = Configuration.get(id)
+
+    if (!config) {
+      return [status: "fail", message: getMessage("configuration.not.found")]
+    }
+
+    Configuration.remove(grailsApplication, config)
+    return [status: "success", data: null]
+  }
+
+  protected String getMessage(String key, List params=[]) {
+    messageSource.getMessage(key, params.toArray(), LH.locale)
   }
 }

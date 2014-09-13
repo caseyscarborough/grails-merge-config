@@ -9,14 +9,22 @@ class ConfigurationController {
   static allowedMethods = [save: 'POST', update: 'PUT', delete: 'DELETE']
 
   def configurationService
+  def grailsApplication
 
   def index() {
     def configs = Configuration.list(sort: 'key')
-    [configs: configs, configsCount: configs.size(), types: [String, Integer]]
+    Map currentConfig = grailsApplication.config.flatten().sort { it.key }
+    currentConfig.values().removeAll(['dataSource.url', 'dataSource.username', 'dataSource.password'] as Set)
+
+    [configs: configs, configsCount: configs.size(), types: [String, Integer], currentConfig: currentConfig]
   }
 
   def save() {
     renderResult(configurationService.create(params))
+  }
+
+  def delete(Long id) {
+    renderResult(configurationService.delete(id))
   }
 
   protected renderResult(result) {
