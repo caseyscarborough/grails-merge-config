@@ -36,24 +36,28 @@ class Configuration {
   }
 
   static void remove(GrailsApplication application, Configuration c) {
+    def config = Configuration.reloadFromFiles(application)
     application.config.remove(c?.key)
-    ConfigObject config = new ConfigObject()
-    application.config.locations.each { String location ->
-      String configFile = location.split("file:")[0]
-      config.merge(new ConfigSlurper().parse(new File(configFile).text))
-    }
-    application.config.put(c?.key, config.get(c?.key))
+    application.config.put(c?.key, config.flatten().get(c?.key))
 
     c.delete(flush: true)
   }
 
   static ConfigObject load() {
     def persistedConfig = new ConfigObject()
-
     Configuration.all.each { Configuration config ->
       persistedConfig.put(config.key, config.value)
     }
-
     return persistedConfig
+  }
+
+  private static ConfigObject reloadFromFiles(GrailsApplication application) {
+    ConfigObject config = new ConfigObject()
+    config.merge(new ConfigSlurper().parse(new File("grails-app/conf/Config.groovy").text))
+    application.config.locations.each { String location ->
+      String configFile = location.split("file:")[0]
+      config.merge(new ConfigSlurper().parse(new File(configFile).text))
+    }
+    config
   }
 }

@@ -11,18 +11,8 @@ class ConfigurationService {
   def grailsApplication
   def messageSource
 
-  Map getCurrentConfiguration() {
-    Map currentConfiguration = [:]
-    grailsApplication.config.flatten().each { config ->
-      if (!config?.key?.toString()?.startsWith("dataSource")) {
-        currentConfiguration[(config?.key?.toString())] = config?.value
-      }
-    }
-    return currentConfiguration.sort { it.key }
-  }
-
   Map create(GrailsParameterMap params) {
-    def existingItem = grailsApplication.config.flatten().get(params?.key)
+    def existingItem = configuration.get(params?.key)
     if (!existingItem) {
       return [status: "fail", message: getMessage("configuration.not.exists")]
     }
@@ -62,5 +52,9 @@ class ConfigurationService {
 
   protected String getMessage(String key, List params=[]) {
     messageSource.getMessage(key, params.toArray(), LH.locale)
+  }
+
+  Map getConfiguration() {
+    grailsApplication.config.flatten()
   }
 }
