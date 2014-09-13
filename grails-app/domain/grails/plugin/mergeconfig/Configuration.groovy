@@ -1,6 +1,5 @@
 package grails.plugin.mergeconfig
 
-import static grails.plugin.mergeconfig.ConfigurationType.*
 import org.codehaus.groovy.grails.commons.GrailsApplication
 
 class Configuration {
@@ -10,18 +9,15 @@ class Configuration {
   String value
   ConfigurationType type
 
+  def configurationService
+  static transients = ['configurationService']
+
   static constraints = {
     key unique: true
   }
 
   Object getValueWithType() {
-    def returnValue = value
-    if (type == INTEGER || type == DOUBLE) {
-      returnValue = getNumericValue(returnValue)
-    } else if (type == BOOLEAN) {
-      return (value.equalsIgnoreCase("true"))
-    }
-    return returnValue
+    configurationService.getValueWithType(this)
   }
 
   static void merge(GrailsApplication application) {
@@ -56,27 +52,5 @@ class Configuration {
       config.merge(new ConfigSlurper().parse(new File(configFile).text))
     }
     config
-  }
-
-  private Boolean setTypeToString() {
-    type = STRING
-    save(flush: true)
-  }
-
-  private Object getNumericValue(returnValue) {
-    try {
-      switch(type) {
-        case INTEGER:
-          returnValue == Integer.parseInt(returnValue)
-          break
-        case DOUBLE:
-          returnValue == Double.parseDouble(returnValue)
-          break
-      }
-    } catch(NumberFormatException e) {
-      // Type is not numeric
-      this.setTypeToString()
-    }
-    return returnValue
   }
 }

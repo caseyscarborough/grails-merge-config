@@ -5,6 +5,8 @@ import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 import org.springframework.context.NoSuchMessageException
 import org.springframework.context.i18n.LocaleContextHolder as LH
 
+import static grails.plugin.mergeconfig.ConfigurationType.*
+
 @Transactional
 class ConfigurationService {
 
@@ -50,11 +52,49 @@ class ConfigurationService {
     return [status: "success", data: null]
   }
 
-  protected String getMessage(String key, List params=[]) {
-    messageSource.getMessage(key, params.toArray(), LH.locale)
-  }
-
   Map getConfiguration() {
     grailsApplication.config.flatten()
+  }
+
+  Object getValueWithType(Configuration config) {
+    def returnValue = config?.value
+    if (config?.type == INTEGER || config?.type == DOUBLE) {
+      returnValue = getNumericValue(returnValue)
+    } else if (config?.type == BOOLEAN) {
+      return (config?.value?.equalsIgnoreCase("true"))
+    } else if (config?.type == LIST) {
+      returnValue = []
+      config?.value?.split(",")?.each { value ->
+        returnValue << value
+      }
+    }
+    return returnValue
+  }
+
+  protected Boolean setTypeToString(config) {
+    config?.type = STRING
+    config?.save(flush: true)
+  }
+
+  protected Object getNumericValue(config) {
+    def returnValue = config?.value
+    try {
+      switch(config?.type) {
+        case INTEGER:
+          returnValue = Integer.parseInt(config?.value)
+          break
+        case DOUBLE:
+          returnValue = Double.parseDouble(config?.value)
+          break
+      }
+    } catch(NumberFormatException e) {
+      // Type is not numeric
+      setTypeToString(config)
+    }
+    return returnValue
+  }
+
+  protected String getMessage(String key, List params=[]) {
+    messageSource.getMessage(key, params.toArray(), LH.locale)
   }
 }
