@@ -15,14 +15,16 @@ class Configuration {
 
   def getValueWithType() {
     def returnValue = value
-    if (type == "java.lang.Integer") {
+    if (type == "Integer") {
       try {
         returnValue = Integer.parseInt(returnValue)
       } catch(NumberFormatException e) {
         returnValue = value
-        type = "java.lang.String"
+        type = "String"
         save(flush: true)
       }
+    } else if (type == "Boolean") {
+      return (value.equalsIgnoreCase("true"))
     }
     return returnValue
   }

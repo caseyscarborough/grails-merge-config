@@ -42,7 +42,7 @@
         <label for="new-config-type">Type</label>
         <select class="form-control" id="new-config-type">
           <g:each in="${types}" var="type">
-            <option value="${type.name}">${type.name}</option>
+            <option value="${type.simpleName}">${type.simpleName}</option>
           </g:each>
         </select>
       </div>

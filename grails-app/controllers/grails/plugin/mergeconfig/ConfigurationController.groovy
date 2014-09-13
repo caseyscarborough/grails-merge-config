@@ -12,7 +12,7 @@ class ConfigurationController {
 
   def index() {
     def configs = Configuration.list(sort: 'key')
-    [configs: configs, configsCount: configs.size(), types: [String, Integer]]
+    [configs: configs, configsCount: configs.size(), types: [String, Integer, Boolean]]
   }
 
   def save() {
