@@ -28,8 +28,4 @@ held in Config.groovy, from within the application without requiring a restart.
 
   // Online location of the plugin's browseable source code.
   def scm = [ url: "https://github.com/caseyscarborough/grails-merge-config" ]
-
-  def doWithSpring = {
-    Configuration.merge(application)
-  }
 }
