@@ -38,6 +38,68 @@ class BootStrap {
 
 Then in your application, navigate to the `configuration/index` controller action (the URI should be `/your-application-name/configuration`) to see the Configuration Management page.
 
+If you do not use the `create`, `create-drop`, or `update` `dbCreate` options in your `DataSource.groovy` file, or you use the [Grails Database Migration Plugin](http://grails.org/plugin/database-migration), then you need to manually create the table to store your Configuration. The following are the Grails migration and SQL queries required to do so:
+
+Grails migration:
+
+```groovy
+databaseChangeLog = {
+
+  changeSet(author: "Your Name", id: "create-configuration-table") {
+    createTable(tableName: "configuration") {
+	  column(autoIncrement: "true", name: "id", type: "bigint") {
+	    constraints(nullable: "false", primaryKey: "true", primaryKeyName: "configurationPK")
+	  }
+
+      column(name: "version", type: "bigint") {
+        constraints(nullable: "false")
+      }
+
+      column(name: "description", type: "varchar(255)") {
+        constraints(nullable: "false")
+      }
+
+      column(name: "key", type: "varchar(255)") {
+        constraints(nullable: "false")
+      }
+
+      column(name: "type", type: "varchar(255)") {
+        constraints(nullable: "false")
+      }
+
+      column(name: "value", type: "varchar(255)") {
+        constraints(nullable: "false")
+      }
+    }
+  }
+
+  changeSet(author: "Your Name", id: "create-unique-constraint-for-configuration-key") {
+    createIndex(indexName: "key_uniq_1410639538043", tableName: "configuration", unique: "true") {
+      column(name: "key")
+    }
+  }
+}
+```
+
+SQL (somewhat generic)
+
+```sql
+drop table configuration if exists;
+
+create table configuration (
+    id int not null auto_increment primary key,
+    version int not null,
+    description varchar(255) not null,
+    key varchar(255) not null,
+    type varchar(255) not null,
+    value varchar(255) not null,
+    primary key (id)
+);
+
+alter table configuration
+    add constraint UK_5wejhym1uspe4klluscbwo9r  unique (key);
+```
+
 ## Usage
 
 ### Setting Configuration
