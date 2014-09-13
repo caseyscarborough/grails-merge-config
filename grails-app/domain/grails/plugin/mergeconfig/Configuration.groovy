@@ -7,17 +7,17 @@ class Configuration {
   String description
   String key
   String value
-  Class type
+  String type
 
   static constraints = {
-    description nullable: true
+    key unique: true
   }
 
   static void merge(GrailsApplication application) {
-    def mergedConfig = new ConfigObject()
     def currentConfig = application.config
     def persistedConfig = Configuration.load()
 
+    def mergedConfig = new ConfigObject()
     mergedConfig.putAll(currentConfig.merge(persistedConfig))
     application.config = mergedConfig
   }
