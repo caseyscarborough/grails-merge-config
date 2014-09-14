@@ -20,22 +20,6 @@ compile ":merge-config:0.1"
 
 > Note: This plugin has not made its way into the central Grails repository yet, but will soon. Until then, you can download the source of this plugin and run `grails maven-install` from the root of the repository to install it locally.
 
-And add the following to your `Bootstrap.groovy` file:
-
-```groovy
-import grails.plugin.mergeconfig.Configuration
-
-class BootStrap {
-  def grailsApplication
-
-  def init = { servletContext ->
-    // This will merge the configuration you've stored in the database
-    // with the configuration loaded from your configuration files.
-    Configuration.merge(grailsApplication)
-  }
-}
-```
-
 Then in your application, navigate to the `configuration/index` controller action (the URI should be `/your-application-name/configuration`) to see the Configuration Management page.
 
 ### Schema Creation
@@ -138,6 +122,14 @@ def config = configurationService.configuration
 
 // Get one value
 def foo = config.get("application.option.foo")
+def bar = config."application.option.bar"
+```
+
+Which is just a shortcut for retrieving them from the `grailsApplication` instance:
+
+```groovy
+grailsApplication.config.get("application.option.foo")
+grailsApplication.config."application.option.foo"
 ```
 
 ### Editing the Management Page
