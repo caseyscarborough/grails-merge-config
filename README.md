@@ -1,6 +1,6 @@
 # Merge Config Grails Plugin
 
-This plugin gives you the ability to manage your configuration located in Config.groovy or another configuration file in your application without requiring the application to be restarted.
+This plugin gives you the ability to manage your configuration located in Config.groovy or another configuration file in your application without requiring the application to be restarted. It also has a full web interface for managing your configuration.
 
 ## Dependencies
 
@@ -111,28 +111,11 @@ If you delete the key from the management page, then the value from your configu
 
 ### Retrieving Configuration
 
-If you need to retrieve any configuration item in your application, you can get it from the `getConfiguration()` method in the `ConfigurationService`. For example:
+If you need to retrieve any configuration item in your application, you can get it from your `grailsApplication` instance:
 
 ```groovy
-// Inject the service into your service or controller
-def configurationService
-
-// Get all configuration
-def config = configurationService.configuration
-
-// Get one value
-def foo = config.get("application.option.foo")
-def bar = config."application.option.bar"
+grailsApplication.config.application.option.foo // => "updated-value"
 ```
-
-Which is just a shortcut for retrieving them from the `grailsApplication` instance:
-
-```groovy
-grailsApplication.config.get("application.option.foo")
-grailsApplication.config."application.option.foo"
-```
-
-> Note: Currently you can't retrieve the key without quotes, without getting the original value. See [Issue 2](https://github.com/caseyscarborough/grails-merge-config/issues/2).
 
 ### Editing the Management Page
 
