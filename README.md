@@ -132,6 +132,8 @@ grailsApplication.config.get("application.option.foo")
 grailsApplication.config."application.option.foo"
 ```
 
+> Note: Currently you can't retrieve the key without quotes, without getting the original value. See [Issue 2](https://github.com/caseyscarborough/grails-merge-config/issues/2).
+
 ### Editing the Management Page
 
 If you'd like to customize the management page, you can copy the [`grails-app/views/configuration/index.gsp`](https://github.com/caseyscarborough/grails-merge-config/blob/master/grails-app/views/configuration/index.gsp) page into your application at the same location, then feel free to edit as you wish.
