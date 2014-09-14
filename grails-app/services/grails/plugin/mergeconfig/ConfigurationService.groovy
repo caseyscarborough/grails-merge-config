@@ -14,7 +14,7 @@ class ConfigurationService {
   def messageSource
 
   Map create(GrailsParameterMap params) {
-    if (!configuration.get(params?.key)) {
+    if (!grailsApplication.config.flatten().get(params?.key)) {
       return [status: "fail", message: getMessage("configuration.not.exists")]
     }
 
@@ -40,7 +40,7 @@ class ConfigurationService {
       return [status: "fail", message: message]
     }
 
-    Configuration.add(grailsApplication, config)
+    Configuration.merge(grailsApplication)
     return [status: "success", data: [config: config?.toMap()]]
   }
 
@@ -53,10 +53,6 @@ class ConfigurationService {
 
     Configuration.remove(grailsApplication, config)
     return [status: "success", data: null]
-  }
-
-  Map getConfiguration() {
-    grailsApplication.config.flatten()
   }
 
   Object getValueWithType(Configuration config) {
