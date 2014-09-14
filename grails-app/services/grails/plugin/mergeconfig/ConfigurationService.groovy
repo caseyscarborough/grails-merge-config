@@ -56,7 +56,7 @@ class ConfigurationService {
   }
 
   Map getConfiguration() {
-    grailsApplication.config.flatten()
+    grailsApplication.config
   }
 
   Object getValueWithType(Configuration config) {

@@ -26,7 +26,7 @@ class Configuration {
     configurationService.getValueWithType(this)
   }
 
-  public Map toMap() {
+  Map toMap() {
     def config = [
         id: id,
         key: key,
