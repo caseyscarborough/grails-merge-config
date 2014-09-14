@@ -59,9 +59,7 @@ databaseChangeLog = {
         constraints(nullable: "false")
       }
 
-      column(name: "description", type: "varchar(255)") {
-        constraints(nullable: "false")
-      }
+      column(name: "description", type: "varchar(255)")
 
       column(name: "key", type: "varchar(255)") {
         constraints(nullable: "false")
@@ -93,7 +91,7 @@ drop table configuration if exists;
 create table configuration (
     id int not null auto_increment primary key,
     version int not null,
-    description varchar(255) not null,
+    description varchar(255),
     key varchar(255) not null,
     type varchar(255) not null,
     value varchar(255) not null,
