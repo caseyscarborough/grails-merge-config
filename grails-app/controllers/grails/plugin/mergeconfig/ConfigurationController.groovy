@@ -15,10 +15,12 @@ class ConfigurationController {
     [configs: configs, configsCount: configs.size(), types: ConfigurationType.values()]
   }
 
+  @Transactional
   def save() {
     renderResult(configurationService.create(params))
   }
 
+  @Transactional
   def delete(Long id) {
     renderResult(configurationService.delete(id))
   }
