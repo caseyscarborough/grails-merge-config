@@ -17,6 +17,11 @@ class Configuration {
     key unique: true
   }
 
+  static mapping = {
+    // Key is a reserved word in some SQL dialects
+    key column: "key_name"
+  }
+
   Object getValueAsType() {
     configurationService.getValueWithType(this)
   }
