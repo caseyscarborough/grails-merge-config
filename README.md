@@ -61,7 +61,7 @@ databaseChangeLog = {
 
       column(name: "description", type: "varchar(255)")
 
-      column(name: "key", type: "varchar(255)") {
+      column(name: "key_name", type: "varchar(255)") {
         constraints(nullable: "false")
       }
 
@@ -92,7 +92,7 @@ create table configuration (
     id int not null auto_increment primary key,
     version int not null,
     description varchar(255),
-    key varchar(255) not null,
+    key_name varchar(255) not null,
     type varchar(255) not null,
     value varchar(255) not null,
     primary key (id)
