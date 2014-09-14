@@ -17,4 +17,10 @@ held in Config.groovy, from within the application without requiring a restart.
   def license = "MIT"
   def issueManagement = [ system: "GitHub", url: "https://github.com/caseyscarborough/grails-merge-config/issues" ]
   def scm = [ url: "https://github.com/caseyscarborough/grails-merge-config" ]
+
+  def doWithApplicationContext = { ctx ->
+    def application = ctx.grailsApplication
+    def Configuration = application.getDomainClass("grails.plugin.mergeconfig.Configuration").clazz
+    Configuration.merge(application)
+  }
 }
