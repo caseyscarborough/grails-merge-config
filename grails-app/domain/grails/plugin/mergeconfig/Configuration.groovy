@@ -13,6 +13,7 @@ class Configuration {
   static transients = ['configurationService']
 
   static constraints = {
+    description nullable: true
     key unique: true
   }
 

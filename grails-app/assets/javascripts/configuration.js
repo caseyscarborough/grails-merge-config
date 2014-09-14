@@ -4,7 +4,7 @@ var Configuration = (function($) {
         configsCount = null;
 
     var _create = function() {
-        if (_validateFields(["#new-config-description", "#new-config-key", "#new-config-value"])) {
+        if (_validateFields(["#new-config-key", "#new-config-value"])) {
             var url = $("#configuration-save-url").html();
             var data = {
                 key: $.trim($("#new-config-key").val()),
@@ -98,11 +98,14 @@ var Configuration = (function($) {
     };
 
     var _appendToTable = function(data) {
+        if (data.description == "") {
+            data.description = "None";
+        }
         var html = '' +
             '<tr id="config-' + data.id + '">' +
-            '<td><strong>' + data.description + '</strong></td>' +
             '<td><strong>' + data.key + '</strong></td>' +
             '<td>' + data.value + '</td>' +
+            '<td>' + data.description + '</td>' +
             '<td>' + $("#new-config-type option[value='" + data.type + "']").text() + '</td>' +
             '<td><a href="#" class="configuration-delete" onclick="Configuration.remove(' + data.id + ')">Delete</a></td>' +
             '</tr>';
