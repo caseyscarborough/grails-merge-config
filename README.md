@@ -15,7 +15,7 @@ The administration page uses the Bootstrap layout for styling, but it is not req
 Install the plugin by adding the following to the plugins section of your `Config.groovy` file:
 
 ```groovy
-compile ":merge-config:0.1"
+compile ":merge-config:0.1.1"
 ```
 
 > Note: This plugin has not made its way into the central Grails repository yet, but will soon. Until then, you can download the source of this plugin and run `grails maven-install` from the root of the repository to install it locally.
