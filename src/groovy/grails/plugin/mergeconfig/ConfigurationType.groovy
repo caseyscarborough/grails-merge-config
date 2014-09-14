@@ -23,4 +23,13 @@ public enum ConfigurationType {
   public String getFullName() {
     fullName
   }
+
+  public Map toMap() {
+    def type = [
+        name: toString(),
+        simpleName: simpleName,
+        fullName: fullName
+    ]
+    return type
+  }
 }

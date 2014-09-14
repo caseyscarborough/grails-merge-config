@@ -4,9 +4,9 @@ import org.codehaus.groovy.grails.commons.GrailsApplication
 
 class Configuration {
 
-  String description
   String key
   String value
+  String description
   ConfigurationType type
 
   def configurationService
@@ -19,6 +19,17 @@ class Configuration {
 
   Object getValueAsType() {
     configurationService.getValueWithType(this)
+  }
+
+  public Map toMap() {
+    def config = [
+        id: id,
+        key: key,
+        value: valueAsType,
+        description: description ?: "None",
+        type: type?.toMap()
+    ]
+    return config
   }
 
   static void merge(GrailsApplication application) {

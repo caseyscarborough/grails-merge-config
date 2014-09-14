@@ -19,25 +19,29 @@ class ConfigurationService {
     }
 
     def config = new Configuration(
-      key: params?.key,
-      value: (String) params?.value,
-      type: ConfigurationType.valueOf(params?.type),
-      description: params?.description
+        key: params?.key,
+        value: (String) params?.value,
+        type: ConfigurationType.valueOf(params?.type),
+        description: params?.description
     )
+
+    if (configurationHasTypeMismatch(config)) {
+      return [status: "fail", message: getMessage("configuration.type.${config?.type?.simpleName?.toLowerCase()}.mismatch")]
+    }
 
     if (!config.save(flush: true)) {
       def error = config?.errors?.fieldError
       def message
       try {
         message = getMessage("configuration.${error?.field}.${error?.code}")
-      } catch(NoSuchMessageException e) {
+      } catch (NoSuchMessageException e) {
         message = getMessage("configuration.unknown.error")
       }
       return [status: "fail", message: message]
     }
 
     Configuration.add(grailsApplication, config)
-    return [status: "success", data: [config: config]]
+    return [status: "success", data: [config: config?.toMap()]]
   }
 
   Map delete(Long id) {
@@ -73,7 +77,7 @@ class ConfigurationService {
   protected Object getNumericValue(Configuration config) {
     def returnValue = config?.value
     try {
-      switch(config?.type) {
+      switch (config?.type) {
         case INTEGER:
           returnValue = Integer.parseInt(config?.value)
           break
@@ -81,7 +85,7 @@ class ConfigurationService {
           returnValue = Double.parseDouble(config?.value)
           break
       }
-    } catch(NumberFormatException e) {
+    } catch (NumberFormatException e) {
       // Type is not numeric
       setTypeToString(config)
     }
@@ -93,7 +97,29 @@ class ConfigurationService {
     config?.save(flush: true)
   }
 
-  protected String getMessage(String key, List params=[]) {
+  protected Boolean configurationHasTypeMismatch(Configuration config) {
+    def valid = false
+    if (config?.type == BOOLEAN) {
+      if (config?.value != "true" && config?.value != "false") {
+        valid = true
+      }
+    } else if (config?.type == DOUBLE) {
+      try {
+        Double.parseDouble(config?.value)
+      } catch (NumberFormatException e) {
+        valid = true
+      }
+    } else if (config?.type == INTEGER) {
+      try {
+        Integer.parseInt(config?.value)
+      } catch (NumberFormatException e) {
+        valid = true
+      }
+    }
+    return valid
+  }
+
+  protected String getMessage(String key, List params = []) {
     messageSource.getMessage(key, params.toArray(), LH.locale)
   }
 }

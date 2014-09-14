@@ -15,10 +15,9 @@ var Configuration = (function($) {
 
             _startCreateButton();
             $.ajax({ url: url, data: data, type: 'POST'}).done(function(response) {
-                data.id = response.data.config.id;
                 configsCount++;
                 _clearFields();
-                _appendToTable(data);
+                _appendToTable(response.data.config);
                 _endCreateButton();
                 _updateTable();
             }).fail(function(response) {
@@ -97,17 +96,14 @@ var Configuration = (function($) {
         $("#new-config-description").val("");
     };
 
-    var _appendToTable = function(data) {
-        if (data.description == "") {
-            data.description = "None";
-        }
+    var _appendToTable = function(config) {
         var html = '' +
-            '<tr id="config-' + data.id + '">' +
-            '<td><strong>' + data.key + '</strong></td>' +
-            '<td>' + data.value + '</td>' +
-            '<td>' + data.description + '</td>' +
-            '<td>' + $("#new-config-type option[value='" + data.type + "']").text() + '</td>' +
-            '<td><a href="#" class="configuration-delete" onclick="Configuration.remove(' + data.id + ')">Delete</a></td>' +
+            '<tr id="config-' + config.id + '">' +
+            '<td><strong>' + config.key + '</strong></td>' +
+            '<td>' + config.value + '</td>' +
+            '<td>' + config.description + '</td>' +
+            '<td>' + $("#" + config.type.name).text() + '</td>' +
+            '<td><a href="#" class="configuration-delete" onclick="Configuration.remove(' + config.id + ')">Delete</a></td>' +
             '</tr>';
         $("#config-table-body").append(html);
     };
