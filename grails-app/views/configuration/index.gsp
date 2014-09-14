@@ -10,6 +10,9 @@
   <span id="configuration-save-url"   style="display:none">${createLink(controller: 'configuration', action: 'save')}</span>
   <span id="configuration-delete-url" style="display:none">${createLink(controller: 'configuration', action: 'delete')}</span>
   <hr>
+  <div id="error" class="alert alert-danger" style="display:none">
+    <p id="error-message"></p>
+  </div>
   <h3>List</h3>
     <div id="config-list">
       <table id="config-table" class="table table-hover"<g:if test="${configsCount == 0}"> style="display:none"</g:if>>

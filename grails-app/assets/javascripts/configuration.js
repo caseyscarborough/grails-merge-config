@@ -20,8 +20,9 @@ var Configuration = (function($) {
                 _appendToTable(response.data.config);
                 _endCreateButton();
                 _updateTable();
+                _hideError();
             }).fail(function(response) {
-                alert(response.responseJSON.message);
+                _showError(response.responseJSON.message);
                 _endCreateButton();
             });
         }
@@ -106,6 +107,18 @@ var Configuration = (function($) {
             '<td><a href="#" class="configuration-delete" onclick="Configuration.remove(' + config.id + ')">Delete</a></td>' +
             '</tr>';
         $("#config-table-body").append(html);
+    };
+
+    var _showError = function(message) {
+        var error = $("#error");
+        error.hide();
+        error.children("p").first().empty().append(message);
+        error.fadeIn(300);
+        setTimeout(function() { error.fadeOut(300) }, 5000);
+    };
+
+    var _hideError = function() {
+        $("#error").hide();
     };
 
     return self;
