@@ -14,8 +14,7 @@ class ConfigurationService {
   def messageSource
 
   Map create(GrailsParameterMap params) {
-    def existingItem = configuration.get(params?.key)
-    if (!existingItem) {
+    if (!configuration.get(params?.key)) {
       return [status: "fail", message: getMessage("configuration.not.exists")]
     }
 
@@ -57,26 +56,21 @@ class ConfigurationService {
   }
 
   Object getValueWithType(Configuration config) {
-    def returnValue = config?.value
     if (config?.type == INTEGER || config?.type == DOUBLE) {
-      returnValue = getNumericValue(returnValue)
+      return getNumericValue(config)
     } else if (config?.type == BOOLEAN) {
       return (config?.value?.equalsIgnoreCase("true"))
     } else if (config?.type == LIST) {
-      returnValue = []
+      def list = []
       config?.value?.split(",")?.each { value ->
-        returnValue << value
+        list << value
       }
+      return list
     }
-    return returnValue
+    return config?.value
   }
 
-  protected Boolean setTypeToString(config) {
-    config?.type = STRING
-    config?.save(flush: true)
-  }
-
-  protected Object getNumericValue(config) {
+  protected Object getNumericValue(Configuration config) {
     def returnValue = config?.value
     try {
       switch(config?.type) {
@@ -92,6 +86,11 @@ class ConfigurationService {
       setTypeToString(config)
     }
     return returnValue
+  }
+
+  protected Boolean setTypeToString(Configuration config) {
+    config?.type = STRING
+    config?.save(flush: true)
   }
 
   protected String getMessage(String key, List params=[]) {

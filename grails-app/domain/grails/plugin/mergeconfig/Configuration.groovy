@@ -16,7 +16,7 @@ class Configuration {
     key unique: true
   }
 
-  Object getValueWithType() {
+  Object getValueAsType() {
     configurationService.getValueWithType(this)
   }
 
@@ -25,7 +25,7 @@ class Configuration {
   }
 
   static void add(GrailsApplication application, Configuration config) {
-    application.config.put(config?.key, config?.valueWithType)
+    application.config.put(config?.key, config?.valueAsType)
   }
 
   static void remove(GrailsApplication application, Configuration c) {
