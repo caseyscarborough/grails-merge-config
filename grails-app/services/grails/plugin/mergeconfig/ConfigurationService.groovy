@@ -2,6 +2,7 @@ package grails.plugin.mergeconfig
 
 import grails.transaction.Transactional
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
+import org.codehaus.groovy.runtime.DefaultGroovyMethods
 import org.springframework.context.NoSuchMessageException
 import org.springframework.context.i18n.LocaleContextHolder as LH
 
@@ -71,21 +72,16 @@ class ConfigurationService {
   }
 
   protected Object getNumericValue(Configuration config) {
-    def returnValue = config?.value
-    try {
+    if (config?.value?.isNumber()) {
       switch (config?.type) {
         case INTEGER:
-          returnValue = Integer.parseInt(config?.value)
-          break
+          return Integer.parseInt(config?.value)
         case DOUBLE:
-          returnValue = Double.parseDouble(config?.value)
-          break
+          return Double.parseDouble(config?.value)
       }
-    } catch (NumberFormatException e) {
-      // Type is not numeric
-      setTypeToString(config)
     }
-    return returnValue
+    setTypeToString(config)
+    return config?.value
   }
 
   protected Boolean setTypeToString(Configuration config) {
