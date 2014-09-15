@@ -2,8 +2,8 @@ package grails.plugin.mergeconfig
 
 public enum ConfigurationType {
 
-  BOOLEAN("Boolean", "java.lang.Boolean"),
   STRING("String", "java.lang.String"),
+  BOOLEAN("Boolean", "java.lang.Boolean"),
   INTEGER("Integer", "java.lang.Integer"),
   DOUBLE("Double", "java.lang.Double"),
   LIST("List", "java.util.List")
