@@ -52,7 +52,7 @@ class Configuration {
   private static ConfigObject update() {
     def configObject = new ConfigObject()
     Configuration.all.each { Configuration config ->
-      def string = (config.type == STRING) ? "${config?.key} = \"${config?.value}\"" : "${config?.key} = ${config?.value}\n"
+      def string = (config.type == STRING) ? "${config?.key} = \"${config?.valueAsType}\"" : "${config?.key} = ${config?.valueAsType}\n"
       configObject.merge(new ConfigSlurper().parse(string))
     }
     configObject
