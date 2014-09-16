@@ -18,8 +18,6 @@ Install the plugin by adding the following to the plugins section of your `Confi
 compile ":merge-config:0.1.1"
 ```
 
-> Note: This plugin has not made its way into the central Grails repository yet, but will soon. Until then, you can download the source of this plugin and run `grails maven-install` from the root of the repository to install it locally.
-
 Then in your application, navigate to the `configuration/index` controller action (the URI should be `/your-application-name/configuration`) to see the Configuration Management page.
 
 ### Schema Creation
