@@ -62,9 +62,13 @@ class Configuration {
   private static ConfigObject reload(GrailsApplication application) {
     ConfigObject config = new ConfigObject()
     config.merge(new ConfigSlurper(Environment.current.getName()).parse(application.classLoader.loadClass("Config")))
-    application.config.locations.each { String location ->
-      String configFile = location.split("file:")[0]
-      config.merge(new ConfigSlurper(Environment.current.getName()).parse(new File(configFile).text))
+    application.config.grails.config.locations.each { String location ->
+	    if(location?.startsWith('file:')){
+	      String configFile = location.split("file:")[1]
+	      config.merge(new ConfigSlurper(Environment.current.getName()).parse(new File(configFile).text))
+	    }else{
+		    log.error('classpath resources are not yet supported by this plugin.')
+	    }
     }
     config
   }
