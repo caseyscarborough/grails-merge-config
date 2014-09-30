@@ -64,8 +64,12 @@ class Configuration {
     config.merge(new ConfigSlurper(Environment.current.getName()).parse(application.classLoader.loadClass("Config")))
     application.config.grails.config.locations.each { String location ->
 	    if(location?.startsWith('file:')){
-	      String configFile = location.split("file:")[1]
-	      config.merge(new ConfigSlurper(Environment.current.getName()).parse(new File(configFile).text))
+		    File configFile = new File(location.split("file:")[1])
+		    if(configFile?.exists()){
+	        config.merge(new ConfigSlurper(Environment.current.getName()).parse(configFile.text))
+		    }else{
+			    log.warn("Could not locate configFile: ${configFile?.path}")
+		    }
 	    }else{
 		    log.error('classpath resources are not yet supported by this plugin.')
 	    }
