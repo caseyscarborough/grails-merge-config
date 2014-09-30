@@ -14,17 +14,17 @@ class ConfigurationService {
   def grailsApplication
   def messageSource
 
-  Map create(GrailsParameterMap params) {
-    if (!grailsApplication.config.flatten().get(params?.key)) {
+  Map create(Map params, checkIfKeyExists = true) {
+    if (checkIfKeyExists && !grailsApplication.config.flatten().containsKey(params?.key)) {
       return [status: "fail", message: getMessage("configuration.not.exists")]
     }
 
-    def config = new Configuration(
-        key: params?.key,
-        value: (String) params?.value,
-        type: ConfigurationType.valueOf(params?.type),
-        description: params?.description
-    )
+    def config = Configuration.findOrCreateByKey(params?.key)
+		config.properties = [
+			  value: (String) params?.value,
+			  type: ConfigurationType.valueOf(params?.type),
+			  description: params?.description
+		]
 
     if (configurationHasTypeMismatch(config)) {
       return [status: "fail", message: getMessage("configuration.type.${config?.type?.simpleName?.toLowerCase()}.mismatch")]

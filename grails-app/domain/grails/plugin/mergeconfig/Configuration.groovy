@@ -1,5 +1,6 @@
 package grails.plugin.mergeconfig
 
+import grails.util.Environment
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import static grails.plugin.mergeconfig.ConfigurationType.STRING
 
@@ -53,17 +54,25 @@ class Configuration {
     def configObject = new ConfigObject()
     Configuration.all.each { Configuration config ->
       def string = (config.type == STRING) ? "${config?.key} = \"${config?.valueAsType}\"" : "${config?.key} = ${config?.valueAsType}\n"
-      configObject.merge(new ConfigSlurper().parse(string))
+      configObject.merge(new ConfigSlurper(Environment.current.getName()).parse(string))
     }
     configObject
   }
 
   private static ConfigObject reload(GrailsApplication application) {
     ConfigObject config = new ConfigObject()
-    config.merge(new ConfigSlurper().parse(application.classLoader.loadClass("Config")))
-    application.config.locations.each { String location ->
-      String configFile = location.split("file:")[0]
-      config.merge(new ConfigSlurper().parse(new File(configFile).text))
+    config.merge(new ConfigSlurper(Environment.current.getName()).parse(application.classLoader.loadClass("Config")))
+    application.config.grails.config.locations.each { String location ->
+	    if(location?.startsWith('file:')){
+		    File configFile = new File(location.split("file:")[1])
+		    if(configFile?.exists()){
+	        config.merge(new ConfigSlurper(Environment.current.getName()).parse(configFile.text))
+		    }else{
+			    log.warn("Could not locate configFile: ${configFile?.path}")
+		    }
+	    }else{
+		    log.error('classpath resources are not yet supported by this plugin.')
+	    }
     }
     config
   }
